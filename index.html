@@ -4,31 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>English Study Hub</title>
-    <style>
-        :root { --main-brown: #8b5a2b; --light-yellow: #fffbe6; --sidebar-width: 250px; }
-        * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; }
-        body { display: none; flex-direction: column; height: 100vh; background: #fdfdfd; overflow: hidden; }
-        .header { height: 60px; padding: 0 20px; display: flex; align-items: center; border-bottom: 1px solid #eee; background: #fff; z-index: 1100; position: relative; font-weight: bold; }
-        .menu-btn { background: none; border: none; font-size: 24px; cursor: pointer; margin-right: 15px; }
-        .layout { display: flex; flex: 1; overflow: hidden; position: relative; height: calc(100vh - 60px); }
-        .sidebar { width: var(--sidebar-width); background: #fff; border-right: 1px solid #eee; transition: 0.3s; z-index: 1050; }
-        .sidebar li { padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #f9f9f9; display: flex; align-items: center; gap: 10px; list-style: none; }
-        .content { flex: 1; padding: 20px; overflow-y: auto !important; -webkit-overflow-scrolling: touch; background: #fff; }
-        @media (max-width: 768px) { .sidebar { position: absolute; left: -250px; height: 100%; } .sidebar.active { left: 0; } .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1040; } .overlay.active { display: block; } }
-    </style>
+    
+    <link rel="stylesheet" href="css/style.css">
+
     <script>
         (function() {
             const myPassword = "970808"; 
             if (sessionStorage.getItem("isAllowed") === "true") {
-                document.documentElement.style.display = "block";
-                window.onload = () => document.body.style.display = "flex";
                 return;
             }
             const entry = prompt("비밀번호를 입력하세요.");
             if (entry === myPassword) {
                 sessionStorage.setItem("isAllowed", "true");
-                document.documentElement.style.display = "block";
-                window.onload = () => document.body.style.display = "flex";
             } else {
                 alert("접근 권한이 없습니다.");
                 window.location.href = "https://www.google.com";
@@ -41,6 +28,7 @@
         <button id="menuBtn" class="menu-btn">☰</button>
         <h1 class="app-title">English Study Hub</h1>
     </header>
+    
     <div class="layout">
         <nav id="sidebar" class="sidebar">
             <ul>
