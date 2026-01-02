@@ -1,10 +1,11 @@
 const UI = {
-    // 콘텐츠 영역을 가져오는 공통 함수
     getContentArea: () => document.getElementById('content'),
 
-    // 1. 날짜별 공부 기록 목록 렌더링
     renderLogs: function() {
-        const dates = Object.keys(studyData.logs).sort().reverse();
+        // studyData.logs가 없으면 빈 객체로 초기화
+        const logs = studyData.logs || {};
+        const dates = Object.keys(logs).sort().reverse();
+        
         let html = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h2>📅 공부 기록</h2>
@@ -20,20 +21,28 @@ const UI = {
                 `).join('')}
             </ul>`;
         
+        if (dates.length === 0) {
+            html += `<p style="text-align:center; color:#999; margin-top:50px;">기록이 없습니다.</p>`;
+        }
+
         const area = this.getContentArea();
         area.innerHTML = html;
-        area.scrollTop = 0; // 페이지 전환 시 최상단으로 이동
+        area.scrollTop = 0;
     },
 
-    // 2. 특정 날짜 상세 내용 보기
     renderLogDetail: function(date) {
         const log = studyData.logs[date];
+        
+        // ⭐ 오류 방지 핵심: 데이터가 없으면 빈 배열로 강제 설정
+        const chats = log.chats || [];
+        const sentences = log.sentences || [];
+
         let html = `
             <button class="brown-btn" onclick="UI.renderLogs()" style="margin-bottom:15px; background:#666;">← 목록으로</button>
             <h2>📅 ${date} 상세 내용</h2>
             
             <div style="display:flex; flex-direction:column; margin:20px 0;">
-                ${log.chats.map((chat) => `
+                ${chats.map((chat) => `
                     <div class="chat-bubble ${chat.role}">${chat.text}</div>
                 `).join('')}
             </div>
@@ -52,7 +61,7 @@ const UI = {
                     <button class="brown-btn" onclick="App.addSentence('${date}')">추가</button>
                 </div>
                 <div id="sentenceList">
-                    ${log.sentences.map((s, i) => `
+                    ${sentences.map((s, i) => `
                         <div class="sentence-item-card">
                             <div style="flex:1;">
                                 <strong style="color:var(--main-brown);">${s.text}</strong><br>
@@ -74,13 +83,14 @@ const UI = {
         area.scrollTop = 0;
     },
 
-    // 3. 필수 문장 모음 페이지
     renderSentencesPage: function() {
         let html = `<h2 style="margin-bottom:20px;">⭐ 필수 문장 모음</h2>`;
         let hasData = false;
         
-        for (const date in studyData.logs) {
-            studyData.logs[date].sentences.forEach((s) => {
+        const logs = studyData.logs || {};
+        for (const date in logs) {
+            const sentences = logs[date].sentences || [];
+            sentences.forEach((s) => {
                 hasData = true;
                 html += `
                     <div class="sentence-item-card">
@@ -100,7 +110,6 @@ const UI = {
         area.scrollTop = 0;
     },
 
-    // 4. 랜덤 테스트 페이지
     renderTestPage: function(s) {
         this.getContentArea().innerHTML = `
             <div style="text-align:center;">
